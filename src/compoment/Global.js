@@ -1,18 +1,25 @@
-import {AsyncStorage} from 'react-native';
+import {Platform,} from 'react-native';
 var Dimensions = require('Dimensions');
 global.vw = Dimensions.get('window').width;
 global.vh=Dimensions.get('window').height;
 
-global.themeColor='#4fb0fd'
 
 const ajaxPost=(url,data,success)=>{
+    console.log(url,'地址');
+    let tempData=''
+    for(i in data){
+        tempData=tempData+i+'='+data[i]+'&'    
+    }
+    console.log(tempData,'准备要上传的数据')
     fetch(url,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify(data),
+        body:tempData//JSON.stringify(data),
     })
+    // .then(res => res.text())
+    // .then(text => console.log(text))
     .then((response) => response.json())
     .then((responseJson) =>success(responseJson))
     .catch((error) => {
@@ -22,7 +29,12 @@ const ajaxPost=(url,data,success)=>{
 }
 const ajaxPostImg=(url,data,success)=>{
     let formdata=new FormData();
-    formdata.append('file',data)
+    console.log(url,'要上传的地址');
+    for(let i=0;i<data.length;i++){
+        let file = {uri: data[i], type: 'application/octet-stream', name: 'image.jpg'};
+        formdata.append('file',file)
+    }
+    console.log(formdata,'formdata')
     fetch(url,{
         method: 'POST',
         headers: {
@@ -30,6 +42,8 @@ const ajaxPostImg=(url,data,success)=>{
         },
         body: formdata,
     })
+    //.then(res => res.text())
+    //.then(text => console.log(text))
     .then((response) => response.json())
     .then((responseJson) =>success(responseJson))
     .catch((error) => {
@@ -40,7 +54,8 @@ global.content={
     flex:1
 }
 
-
+global.host='http://172.20.10.3:8080'//手机主机地址
+//global.host='http://192.168.0.102:8080'//宿舍无线主机地址
 global.Url={
     news_0:'http://v.juhe.cn/toutiao/index?type=0&key=5b17dafc6727b810d8d91b408c5ba232', //首页新闻
     news_1:'http://v.juhe.cn/toutiao/index?type=shehui&key=5b17dafc6727b810d8d91b408c5ba232', //社会
@@ -55,8 +70,17 @@ global.Url={
     weather: 'http://apis.juhe.cn/simpleWeather/query?city=%E7%A6%8F%E5%B7%9E&key=67d6391830fd7db5604893ad3fd07f74',
     URLsendCode:'http://v.juhe.cn/sms/send?mobile=13205054527&tpl_id=140471&tpl_value=%23code%23%3D654654&key=318fee1e5eeeb355357f95d66f37b1b4', //获取验证码
     URLavailaboleCode:'http://106.13.0.234:8080/linewell/api/sendCodeMessage.do?availaboleCode',//验证码验证 
-    imgUploader:'http://106.13.0.234:8080/linewell/api/wqjbWechatController.do?imgloads'
+    imgUploader:'http://106.13.0.234:8080/linewell/api/wqjbWechatController.do?imgloads',
+    writeMoment:host+'/writeMoment/words',//发表状态
+    uploadImg:host+'/uploader/imgs',//上传图片
+    getmoment:host+'/writeMoment/getmoment',//获取动态
+    changeImg:host+'/user/changeImg',//修改用户头像
 }
-global.ajaxPost=ajaxPost
-global.ajaxPostImg=ajaxPostImg
+
+
+global.ajaxPost=ajaxPost //正常的post请求
+global.ajaxPostImg=ajaxPostImg //图片上传
+global.platfrom=Platform //全局定义平台
+global.themeColor='#4fb0fd' //主题风格
+
 

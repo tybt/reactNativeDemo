@@ -25,8 +25,7 @@ export default class AllInfo extends React.Component{
     }
     render(){
         return(
-            <SafeAreaView style={{flex:1}}>
-                <StatusBar></StatusBar>
+            <SafeAreaView style={{flex:1,marginTop:platfrom.os=='ios'?0:30}}>
                 <ScrollView>
                     <Text style={[styles.commonText,{paddingBottom:0.03*vw,fontWeight:'bold',marginLeft:0.04*vw}]}>全部资料</Text>
                     <Text style={[styles.commonText,styles.branTitle]}>基本资料</Text>

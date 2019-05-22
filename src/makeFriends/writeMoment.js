@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet ,View ,Text,TouchableOpacity,TextInput,FlatList,Image} from 'react-native';
+import { StyleSheet ,View ,Text,TouchableOpacity,TextInput,FlatList,Image,Alert} from 'react-native';
 import {SafeAreaView} from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
 var Dimensions = require('Dimensions');
@@ -14,7 +14,9 @@ export default class WriteMoment extends React.Component{
         this.state = {
             avatarSource:'',
             imgs:[],
-            imgData:''
+            imgData:'',
+            momentWords:'',
+            isReady:false
         };
     }
     componentDidMount(){
@@ -26,20 +28,21 @@ export default class WriteMoment extends React.Component{
                 <View style={styles.topBrand}>
                     <Text onPress={()=>this.props.navigation.goBack()}>取消</Text>
                     <Text style={{fontSize:0.045*vw}} onPress={()=>this.upload()}>发布状态</Text>
-                    <TouchableOpacity>
-                        <View style={styles.btnSave}>
-                            <Text style={{color:'#ffffff'}}>保存</Text>
+                    <TouchableOpacity onPress={()=>this.save()}>
+                        <View style={[styles.btnSave,{backgroundColor:this.state.isReady?themeColor:'#cccccc'}]}>
+                            <Text style={{color:'#ffffff'}} >保存</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
                 <View style={{marginTop:10,width:0.92*vw,marginLeft:0.04*vw}}>
                     <TextInput 
-                    onChangeText={(text) => this.setState({text})}
+                    onChangeText={(text) => this.getWords(text) }
                     multiline={true}
                     value={this.state.text}
                     placeholder={"分享此刻状态..."}></TextInput>
                 </View>
                 <View style={styles.photoBox}>
+                    
                     <Text style={styles.addPhoto} onPress={()=>this.addPhotos()}>+</Text>
                     {
                         this.state.imgs.map((item,index)=>{
@@ -60,8 +63,8 @@ export default class WriteMoment extends React.Component{
     addPhotos(){
         console.log('从相册选择',ImagePicker.showImagePicker)
         var options = {
-            title: 'Select Avatar',
-            customButtons: [{ name: 'fb', title: '蛤？' }],
+            title: '选择图片',
+            customButtons: [{ name: 'fb', title: '取消' }],
             storageOptions: {
               skipBackup: true,
               path: 'images',
@@ -81,6 +84,7 @@ export default class WriteMoment extends React.Component{
                 const source = { uri: response.uri };
                 let temp=this.state.imgs;
                 temp.push(response.uri);
+                console.log(response,'response')
                 this.setState({
                     avatarSource: source,
                     imgs:temp,
@@ -91,8 +95,40 @@ export default class WriteMoment extends React.Component{
     }
     upload(){
         ajaxPostImg(Url.imgUploader,this.state.imgData,function(res){
-            console.log(res)
+            console.log(res);
         })
+    }
+    save(){
+        console.log(this.state.momentWords)
+        let _this=this;
+        ajaxPostImg(Url.uploadImg,this.state.imgs,function(res){
+            console.log(res,'图片返回数据')
+            if(res.code==1){
+                let param={
+                    content:_this.state.momentWords,
+                    userid:9999999999999,
+                    imgs:res.result
+                }
+                ajaxPost(Url.writeMoment,param,function(res){
+                    console.log(res)
+                    if(res.code==1){
+                        Alert.alert("提示",res.success,[{text:'确定',onPress:()=>_this.props.navigation.navigate('makeFriends')}])
+                    }
+                    else{
+                        Alert.alert("提示",'发布失败，请重试',[{text:'确定'}])
+                    }
+                },function(){
+                    console.log('网络故障，请稍后再试')
+                })
+            }
+    
+        })
+    }
+    getWords(text){
+        if(text!=""){
+            this.setState({isReady:true})
+        }
+        this.setState({momentWords:text})
     }
 }
 const styles=StyleSheet.create({
@@ -104,15 +140,14 @@ const styles=StyleSheet.create({
         borderBottomWidth:1,
         borderColor:'#cccccc',
         paddingLeft:0.04*vw,
-        paddingRight:0.04*vw
-
+        paddingRight:0.04*vw,
+        marginTop:platfrom.os=='ios'?0:30,
     },
     btnSave:{
         height:0.08*vw,
         width:0.15*vw,
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor:themeColor,
         borderRadius:5
     },
     addPhoto:{
@@ -125,7 +160,6 @@ const styles=StyleSheet.create({
         color:'#ffffff'
     },
     photoBox:{
-        flex:1,
         flexDirection:'row',
         justifyContent:'flex-start',
         marginTop:20,

@@ -56,9 +56,8 @@ export default class mine extends React.Component {
             </View>
           </View>
         </View>
-        {/* //ios系统用的 */}
         <View style={{display:'flex'}}>
-          <TouchableOpacity >
+          <TouchableOpacity onPress={()=>this.props.navigation.navigate('collectArticle')}>
             <View style={styles.brand}>
               <Image source={require('../img/mine_23.png')} style={styles.brand_1}></Image>
               <Text style={styles.brand_2}>收藏文章</Text>

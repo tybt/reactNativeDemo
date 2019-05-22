@@ -25,14 +25,11 @@ export default class Tab_2 extends React.Component{
     }
     componentWillMount(){
         //获取新闻数据，
-        let _this=this;
-        ajaxPost(Url.news_0,{},function(res){
-            _this.setState({news:res.result.data})
-        })
-        ajaxPost(Url.weather,{},function(res){
-            _this.setState({weather:res.result.realtime,city:res.result.city})
-
-        })
+        // let _this=this;
+        // ajaxPost(Url.news_0,{},function(res){
+        //     console.log(res,'新闻数据')
+        //     _this.setState({news:res.result.data})
+        // })
     }
 
     
@@ -42,35 +39,8 @@ export default class Tab_2 extends React.Component{
     render(){
         return(
             <View >
-                {/* <View style={[styles.navBox,{opacity:this.state.opcityCount}]}>
-                </View> */}
                 <ScrollView  >
-                    {/* <ImageBackground source={require('../../img/timg.jpg')} style={styles.head_backgroundImg}>
-                        <View style={styles.weaBox}>
-                            <Text style={styles.weaTemp}>{this.state.weather.temperature}°c</Text>
-                            <View style={styles.weaInfo}>
-                                <Text style={styles.weaInfoText}>{this.state.city}</Text>
-                                <Text style={styles.weaInfoText}>{this.state.weather.info}</Text>
-                                <Text style={styles.weaInfoText}>{this.state.weather.direct}</Text>
-                                <Text style={styles.weaInfoText}>{this.state.weather.power}</Text>
-                                <Text style={styles.weaInfoText}>{this.state.weather.aqi}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.topNews}>
-                            <FlatList data={[0,1]} renderItem={({item})=>
-                                <View style={styles.topBrand}>
-                                    <Text style={styles.brand_1}>一张蓝图一盘棋 习近平这样擘画京津冀协同发展</Text>
-                                    <View style={styles.brand_2}>
-                                        <Text style={{color:'red',marginLeft:0.04*vw}}>置顶</Text>
-                                        <Text style={{marginLeft:0.02*vw}}>新华社</Text>
-                                        <Text style={{marginLeft:0.02*vw}}>{item}评</Text>
-                                    </View>
-                                </View>
-                            }>
-                            </FlatList>
-                        </View>
-                    </ImageBackground> */}
-                    <FlatList data={this.state.news}  renderItem={({item})=>//新闻内容
+                    <FlatList keyExtractor={(item, index) => index} data={this.state.news}  renderItem={({item})=>//新闻内容
                         <View style={[styles.newBrands,{}]} >
                             {/* 三张图片 */}
                             <View style={{display:item.thumbnail_pic_s02?'flex':'none'}}> 

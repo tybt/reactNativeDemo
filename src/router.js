@@ -18,6 +18,8 @@ import allInfo from '../src/mine/allInfo'
 import editInfo from './mine/editInfo'
 import textInput from './mine/textInput'
 import WriteMoment from './makeFriends/writeMoment'
+import collectArticle from './mine/collectArticle'
+import imageCrop from './compoment/imageCrop'
 
 var Dimensions = require('Dimensions');
 var vw = Dimensions.get('window').width;
@@ -76,7 +78,9 @@ const AppStackNavigator = createStackNavigator(
     allInfo:allInfo,
     editInfo:editInfo,
     textInput:textInput,
-    WriteMoment:WriteMoment
+    WriteMoment:WriteMoment,
+    collectArticle:collectArticle,
+    imageCrop:imageCrop
   },
 );
 
