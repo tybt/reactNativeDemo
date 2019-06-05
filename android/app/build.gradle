@@ -139,6 +139,9 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-modal-translucent')
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-popover-menu')
     implementation project(':react-native-image-crop-picker')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-video')

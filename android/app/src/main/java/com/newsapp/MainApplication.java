@@ -3,6 +3,9 @@ package com.newsapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import me.listenzz.modal.TranslucentModalReactPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import ui.popovermenu.RNPopoverMenuPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.brentvatne.react.ReactVideoPackage;
@@ -27,6 +30,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new TranslucentModalReactPackage(),
+            new VectorIconsPackage(),
+            new RNPopoverMenuPackage(),
             new PickerPackage(),
             new ImagePickerPackage(),
             new ReactVideoPackage(),

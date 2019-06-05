@@ -16,9 +16,6 @@ import {
   SafeAreaView
 } from "react-native";
 
-var Dimensions = require("Dimensions");
-var vw = Dimensions.get("window").width;
-var vh = Dimensions.get("window").height;
 
 export default class makeFriends extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -68,6 +65,7 @@ export default class makeFriends extends React.Component {
     this._navListener = this.props.navigation.addListener("didFocus", () => {
       StatusBar.setBarStyle("dark-content");
       var temp = AsyncStorage.getItem("phone");
+      console.log(temp,'是否登录')
       if (temp != null) {
         this.setState({ isLogin: true });
       } else {
@@ -90,71 +88,19 @@ export default class makeFriends extends React.Component {
         }}
       >
         <View style={styles.headerNav}>
-          {this.state.isLogin == true ? (
-            <View
-              style={[
-                styles.isLogin,
-                {
-                  display: this.state.isLogin == true ? "flex" : "none",
-                  paddingBottom: 5
-                }
-              ]}
-            >
-              <TouchableWithoutFeedback
-                onPress={() => this.props.navigation.navigate("WriteMoment")}
-              >
-                <Image
-                  source={require("../img/friends/friends_06.png")}
-                  style={styles.loginImgs}
-                />
-              </TouchableWithoutFeedback>
-              <View style={styles.isLoginRight}>
-                <TouchableWithoutFeedback>
-                  <Image
-                    source={require("../img/friends/friends_03.png")}
-                    style={styles.loginImgs}
-                  />
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback
-                  onPress={() => this.props.navigation.navigate("personIndex")}
-                >
-                  <Image
-                    source={require("../img/friends/friends_09.png")}
-                    style={styles.loginImgs}
-                  />
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback>
-                  <Image
-                    source={require("../img/friends/friends_12.png")}
-                    style={styles.loginImgs}
-                  />
-                </TouchableWithoutFeedback>
-              </View>
-            </View>
-          ) : (
-            <View
-              style={[
-                styles.noLogin,
-                { display: this.state.isLogin == true ? "none" : "flex" }
-              ]}
-            >
-              <Text style={{ color: "#333", fontSize: 0.04 * vw }}>狐友</Text>
-              <Text
-                style={{ color: "#027fdb", fontSize: 0.04 * vw }}
-                onPress={() => this.props.navigation.navigate("login")}
-              >
-                登录
-              </Text>
-            </View>
-          )}
+          {this.state.isLogin == true ? this.isLoginView(): this.isNoLoginView()}
         </View>
         <ScrollView >
           <FlatList
+            
             onRefresh={()=>this.setRefresh()}
             refreshing={this.state.isRefreshing}
             data={this.state.momentData}
-            renderItem={({ item }) => (
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item,index }) => (
               <View >
+
+                {/* 用户信息部分 */}
                 <View style={styles.userBrand}>
                   <Image
                     source={{uri:host+item.user_photo}}
@@ -179,32 +125,31 @@ export default class makeFriends extends React.Component {
                 <Text style={styles.commentContent}>{item.content}</Text>
 
                 {/* 图片部分 */}
-                <View>
-                  <FlatList
-                    style={styles.imgsList}
-                    data={item.imgData}
-                    contentContainerStyle={styles.commentImgs}
-                    renderItem={({ item }) => (
-                      <TouchableWithoutFeedback
-                        onPress={() =>
-                          this.props.navigation.push("imgShowView", {
-                            imgData: item.imgData
-                          })
-                        }
-                      >
-                        <Image
-                          source={{uri:host+item}}
-                          style={{
-                            height: 0.45 * vw,
-                            width: 0.45 * vw,
-                            marginLeft: 0.01 * vw,
-                            marginTop: 0.01 * vw
-                          }}
-                        />
-                      </TouchableWithoutFeedback>
-                    )}
-                  />
-                </View>
+                <FlatList
+                  style={styles.imgsList}
+                  data={item.imgData}
+                  contentContainerStyle={styles.commentImgs}
+                  renderItem={({ item}) => (
+                    <TouchableWithoutFeedback
+                      onPress={() =>
+                        this.props.navigation.push("imgShowView", {
+                          imgData: item.imgData
+                        })
+                      }
+                    >
+                      <Image
+                        source={{uri:host+item}}
+                        style={{
+                          height: 0.45 * vw,
+                          width: 0.45 * vw,
+                          marginLeft: 0.01 * vw,
+                          marginTop: 0.01 * vw
+                        }}
+                      />
+                      
+                    </TouchableWithoutFeedback>
+                  )}
+                />
 
                 {/* 转发、评论和私信 */}
                 <View style={styles.writeComment}>
@@ -217,7 +162,7 @@ export default class makeFriends extends React.Component {
                       <Text style={{ marginLeft: 5 }}>转发</Text>
                     </View>
                   </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback onPress={() => this.showInput()}>
+                  <TouchableWithoutFeedback onPress={() => this.goDetail(item)}>
                     <View style={{ flexDirection: "row" }}>
                       <Image
                         source={require("../img/friends_09.png")}
@@ -226,13 +171,13 @@ export default class makeFriends extends React.Component {
                       <Text style={{ marginLeft: 5 }}>评论</Text>
                     </View>
                   </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback onPress={() => this.setFavor()}>
+                  <TouchableWithoutFeedback onPress={this.setFavor.bind(this, item, index)}>
                     <View style={{ flexDirection: "row" }}>
                       <Image
-                        source={this.state.getFavor[this.state.isFavor]}
+                        source={item.islike==0?this.state.getFavor[0]:this.state.getFavor[1]}
                         style={{ width: 0.045 * vw, height: 0.045 * vw }}
                       />
-                      <Text style={{ marginLeft: 5 }}>点赞</Text>
+                      <Text style={{ marginLeft: 5 }}>{item.favors}</Text>
                     </View>                  
                   </TouchableWithoutFeedback>
                   
@@ -243,11 +188,64 @@ export default class makeFriends extends React.Component {
           />
         </ScrollView>
         {this.transfer()}
-        {this.writeReply()}
+        
 
         
       </SafeAreaView>
     );
+  }
+  isLoginView(){
+    return(
+      <View
+        style={[styles.isLogin]}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => this.props.navigation.navigate("WriteMoment")}
+        >
+          <Image
+            source={require("../img/friends/friends_06.png")}
+            style={styles.loginImgs}
+          />
+        </TouchableWithoutFeedback>
+        <View style={styles.isLoginRight}>
+          <TouchableWithoutFeedback>
+            <Image
+              source={require("../img/friends/friends_03.png")}
+              style={styles.loginImgs}
+            />
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={() => this.props.navigation.navigate("personIndex")}
+          >
+            <Image
+              source={require("../img/friends/friends_09.png")}
+              style={styles.loginImgs}
+            />
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback>
+            <Image
+              source={require("../img/friends/friends_12.png")}
+              style={styles.loginImgs}
+            />
+          </TouchableWithoutFeedback>
+        </View>
+      </View>
+    )
+  }
+  isNoLoginView(){
+    return(            
+      <View
+        style={[styles.noLogin,]}
+      >
+        <Text style={{ color: "#333", fontSize: 0.04 * vw }}>狐友</Text>
+        <Text
+          style={{ color: "#027fdb", fontSize: 0.04 * vw }}
+          onPress={() => this.props.navigation.navigate("login")}
+        >
+          登录
+        </Text>
+      </View>
+    )
   }
   _headRightPress = () => {
     if (this.props.navigation.state.params.headerRight == "登录") {
@@ -275,27 +273,30 @@ export default class makeFriends extends React.Component {
   closeModal() {
     this.setState({ showStausbar: false, modalVisible: false });
   }
-  showInput() {
-    let _this = this;
-    this.setState({ showStausbar: true });
-
-    setTimeout(function() {
-      _this.setState({ showInput: true });
-    }, 100);
-  }
-  closeInput() {
-    this.setState({ showStausbar: false, showInput: false });
-  }
   //点赞
-  setFavor(){
-    if(this.state.isFavor==0){
-      this.setState({
-        isFavor:1
+  setFavor(item,index){
+    if(item.islike==0){
+      item.islike=1
+      item.favors++
+      console.log(this.state.momentData,'this.state.momentData')
+
+      this.state.momentData[index]=item
+      let temp=this.state.momentData
+      console.log(temp,'temp')
+      this.setState({momentData:temp})
+      ajaxPost(Url.setFavor,{moment_id:item.ID,favorite_user_id:item.userID},function(res){
+        console.log(res,'res')
       })
     }
     else{
-      this.setState({
-        isFavor:0
+      item.islike=0
+      item.favors--
+      this.state.momentData[index]=item
+      let temp=this.state.momentData
+      console.log(temp,'temp')
+      this.setState({momentData:temp})
+      ajaxPost(Url.deleteFavor,{moment_id:item.ID,favorite_user_id:item.userID},function(res){
+        console.log(res,'res')
       })
     }
   }
@@ -451,6 +452,10 @@ export default class makeFriends extends React.Component {
         </Modal>
     )
   }
+  //跳转到详情页
+  goDetail(data){
+    this.props.navigation.navigate('momentDetail',{data:JSON.stringify(data)})
+  }
 }
 
 const styles = StyleSheet.create({
@@ -577,10 +582,6 @@ const styles = StyleSheet.create({
     width: 0.2 * vw,
     marginTop: 20
   },
-  writeComments: {
-    position: "absolute",
-    bottom: 0
-  },
   inputComment: {},
   inputBrand: {
     width: 0.8 * vw,
@@ -611,7 +612,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingLeft: 0.03 * vw,
-    paddingRight: 0.03 * vw
+    paddingRight: 0.03 * vw,
+    paddingBottom: 5
   },
   loginImgs: {
     width: 0.05 * vw,

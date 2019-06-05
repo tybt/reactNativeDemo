@@ -153,7 +153,7 @@ export default class video extends React.Component {
     this.setState({
       listData:temp
     })
-    console.warn(this.state.listData)
+    
   }
 }
 

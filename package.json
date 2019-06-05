@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "fix-modal": "node node_modules/react-native-modal-translucent/scripts/translucent-modal.js",
+    "postinstall": "npm run fix-modal"
   },
   "dependencies": {
     "react": "16.8.3",
@@ -12,8 +14,13 @@
     "react-native-gesture-handler": "^1.1.0",
     "react-native-image-crop-picker": "^0.24.1",
     "react-native-image-picker": "^0.28.1",
+    "react-native-modal-popover": "^0.0.12",
+    "react-native-modal-translucent": "^3.0.1",
     "react-native-photo-browser": "^0.4.0",
+    "react-native-popover": "github:jeanregisser/react-native-popover#8a443d2699b404d55c324edc8536255150340789",
+    "react-native-popover-menu": "^0.0.22",
     "react-native-scrollable-tab-view": "^0.10.0",
+    "react-native-spring-scrollview": "^2.0.22",
     "react-native-tab-navigator": "^0.3.4",
     "react-native-video": "^4.4.1",
     "react-navigation": "^3.8.1"

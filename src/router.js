@@ -20,7 +20,9 @@ import textInput from './mine/textInput'
 import WriteMoment from './makeFriends/writeMoment'
 import collectArticle from './mine/collectArticle'
 import imageCrop from './compoment/imageCrop'
-
+import momentDetail from './makeFriends/momentDetail'
+import popover from './compoment/popover'
+import pop from './compoment/pop'
 var Dimensions = require('Dimensions');
 var vw = Dimensions.get('window').width;
 var vh=Dimensions.get('window').height;
@@ -66,8 +68,10 @@ const tabs=createBottomTabNavigator(
 
 
 const AppStackNavigator = createStackNavigator(
-  {
+  { 
+    pop:pop,
     home:tabs,
+    popover:popover,
     appStart:appStart,
     article:article,
     imgShowView:imgShowView,
@@ -80,7 +84,8 @@ const AppStackNavigator = createStackNavigator(
     textInput:textInput,
     WriteMoment:WriteMoment,
     collectArticle:collectArticle,
-    imageCrop:imageCrop
+    imageCrop:imageCrop,
+    momentDetail:momentDetail
   },
 );
 
