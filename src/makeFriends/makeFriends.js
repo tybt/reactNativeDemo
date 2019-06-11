@@ -1,21 +1,6 @@
 import React from "react";
-import {
-  Text,
-  View,
-  ScrollView,
-  StatusBar,
-  Image,
-  StyleSheet,
-  FlatList,
-  TouchableWithoutFeedback,
-  AsyncStorage,
-  Alert,
-  Modal,
-  KeyboardAvoidingView,
-  TextInput,
-  SafeAreaView
-} from "react-native";
-
+import Pop from '../compoment/pop'
+import {Text,View,ScrollView,StatusBar,Image,StyleSheet,FlatList,TouchableWithoutFeedback,AsyncStorage,Alert,Modal,KeyboardAvoidingView,TextInput,SafeAreaView} from "react-native";
 
 export default class makeFriends extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -40,7 +25,8 @@ export default class makeFriends extends React.Component {
       momentData: [],
       isRefreshing:false,
       getFavor:[require('../img/nozan.png'),require('../img/haszan_03.png')],
-      isFavor:0
+      isFavor:0,
+      showPop:false
     };
   }
   componentWillMount() {
@@ -87,113 +73,135 @@ export default class makeFriends extends React.Component {
           paddingBottom: 35
         }}
       >
+        
         <View style={styles.headerNav}>
           {this.state.isLogin == true ? this.isLoginView(): this.isNoLoginView()}
         </View>
         <ScrollView >
-          <FlatList
-            
-            onRefresh={()=>this.setRefresh()}
-            refreshing={this.state.isRefreshing}
-            data={this.state.momentData}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item,index }) => (
-              <View >
+        {this.state.momentData.map((item,index)=>{
+          return <View >
 
-                {/* 用户信息部分 */}
-                <View style={styles.userBrand}>
-                  <Image
-                    source={{uri:host+item.user_photo}}
-                    style={styles.useImg}
-                  />
-                  <View style={styles.userInfo}>
-                    <Text
-                      style={styles.userName}
-                      onPress={() => this.props.navigation.push("personIndex")}
-                    >
-                      {item.name}
-                    </Text>
-                    <Text
-                      style={styles.userActivity}
-                      onPress={() => this._headRightPress()}
-                    >
-                      分享照片
-                    </Text>
-                    <Text style={styles.userMoment}>{item.create_time}</Text>
-                  </View>
-                </View>
-                <Text style={styles.commentContent}>{item.content}</Text>
-
-                {/* 图片部分 */}
-                <FlatList
-                  style={styles.imgsList}
-                  data={item.imgData}
-                  contentContainerStyle={styles.commentImgs}
-                  renderItem={({ item}) => (
-                    <TouchableWithoutFeedback
-                      onPress={() =>
-                        this.props.navigation.push("imgShowView", {
-                          imgData: item.imgData
-                        })
-                      }
-                    >
-                      <Image
-                        source={{uri:host+item}}
-                        style={{
-                          height: 0.45 * vw,
-                          width: 0.45 * vw,
-                          marginLeft: 0.01 * vw,
-                          marginTop: 0.01 * vw
-                        }}
-                      />
-                      
-                    </TouchableWithoutFeedback>
-                  )}
-                />
-
-                {/* 转发、评论和私信 */}
-                <View style={styles.writeComment}>
-                  <TouchableWithoutFeedback onPress={() => this.showTransfer()}>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("../img/friends_06.png")}
-                        style={{ width: 0.045 * vw, height: 0.045 * vw }}
-                      />
-                      <Text style={{ marginLeft: 5 }}>转发</Text>
-                    </View>
-                  </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback onPress={() => this.goDetail(item)}>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={require("../img/friends_09.png")}
-                        style={{ width: 0.045 * vw, height: 0.045 * vw }}
-                      />
-                      <Text style={{ marginLeft: 5 }}>评论</Text>
-                    </View>
-                  </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback onPress={this.setFavor.bind(this, item, index)}>
-                    <View style={{ flexDirection: "row" }}>
-                      <Image
-                        source={item.islike==0?this.state.getFavor[0]:this.state.getFavor[1]}
-                        style={{ width: 0.045 * vw, height: 0.045 * vw }}
-                      />
-                      <Text style={{ marginLeft: 5 }}>{item.favors}</Text>
-                    </View>                  
-                  </TouchableWithoutFeedback>
-                  
-                </View>
-                <View style={styles.bottomBorder} />
+            {/* 用户信息部分 */}
+            <View style={styles.userBrand}>
+              <Image
+                source={{uri:host+item.user_photo}}
+                style={styles.useImg}
+              />
+              <View style={styles.userInfo}>
+                <Text
+                  style={styles.userName}
+                  onPress={() => this.props.navigation.push("personIndex")}
+                >
+                  {item.name}{index}
+                </Text>
+                <Text
+                  style={styles.userActivity}
+                  onPress={() => this._headRightPress()}
+                >
+                  分享照片
+                </Text>
+                <Text style={styles.userMoment}>{item.create_time}</Text>
+                
+                <TouchableWithoutFeedback style={{position:'relative'}} onPress={()=>this.showPop(index)} >
+                  <Image source={require('../img/friends/shenglue.png')} style={styles.indicators} ref="tests"></Image>
+                </TouchableWithoutFeedback>
               </View>
-            )}
-          />
+            </View>
+            <Text style={styles.commentContent}>{item.content}</Text>
+
+            {/* 图片部分 */}
+            <FlatList style={styles.imgsList}
+              data={item.imgData}
+              contentContainerStyle={styles.commentImgs}
+              renderItem={({ item}) => (
+                <TouchableWithoutFeedback
+                  onPress={() =>
+                    this.props.navigation.push("imgShowView", {
+                      imgData: item.imgData
+                    })
+                  }
+                >
+                  <Image
+                    source={{uri:host+item}}
+                    style={{height: 0.45 * vw,width: 0.45 * vw,marginLeft: 0.01 * vw,marginTop: 0.01 * vw}}
+                  />
+                  
+                </TouchableWithoutFeedback>
+              )}
+            />
+
+            {/* 转发、评论和私信 */}
+            <View style={styles.writeComment}>
+              <TouchableWithoutFeedback onPress={() => this.showTransfer()}>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("../img/friends_06.png")}
+                    style={{ width: 0.045 * vw, height: 0.045 * vw }}
+                  />
+                  <Text style={{ marginLeft: 5 }}>转发</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => this.goDetail(item)}>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={require("../img/friends_09.png")}
+                    style={{ width: 0.045 * vw, height: 0.045 * vw }}
+                  />
+                  <Text style={{ marginLeft: 5 }}>评论</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={()=>this.setFavor(item,index)}>
+                <View style={{ flexDirection: "row" }}>
+                  <Image
+                    source={item.islike==0?this.state.getFavor[0]:this.state.getFavor[1]}
+                    style={{ width: 0.045 * vw, height: 0.045 * vw }}
+                  />
+                  <Text style={{ marginLeft: 5 }}>{item.favors}</Text>
+                </View>                  
+              </TouchableWithoutFeedback>
+              
+            </View>
+            <View style={styles.bottomBorder} />
+          </View>
+        })}
+        
+          
+          
         </ScrollView>
         {this.transfer()}
         
 
-        
+      {this.state.showPop==false?(<View></View>):(
+        <Pop words={"无缘"} 
+        pop_x={this.state.pop_x} 
+        pop_y={this.state.pop_y}
+        hideModals={()=>this.hideModals()}></Pop>)}  
       </SafeAreaView>
     );
   }
+  hideModals(){
+    this.setState({showPop:false})
+  }
+  // 显示ppo
+  showPop(index){
+    console.log(index);
+    let _this=this;
+    if(this.state.showPop==false){
+      console.log(this.refs,'this.refs.test');
+      this.refs.tests.measure((ox, oy, width, height, px, py) => {
+        console.log(ox, oy, width, height, px, py)
+        _this.setState({
+            pop_x:px,
+            pop_y:py,
+            showPop:true
+        })
+      })    
+    }
+    else{
+      this.setState({showPop:false})
+    }
+  }
+
   isLoginView(){
     return(
       <View
@@ -275,10 +283,10 @@ export default class makeFriends extends React.Component {
   }
   //点赞
   setFavor(item,index){
+    console.log('item,index',item,index)
     if(item.islike==0){
       item.islike=1
       item.favors++
-      console.log(this.state.momentData,'this.state.momentData')
 
       this.state.momentData[index]=item
       let temp=this.state.momentData
@@ -459,6 +467,14 @@ export default class makeFriends extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  indicators:{
+    height:0.04*vw,
+    width:0.04*vw,
+    position:'absolute',
+    right:0.15*vw,
+    top:0,
+    zIndex:99
+  },
   headerNav: {
     paddingBottom: 5,
     borderBottomWidth: 1,
@@ -473,7 +489,8 @@ const styles = StyleSheet.create({
     flexWrap: "nowrap",
     flexDirection: "row",
     marginTop: 0.033 * vw,
-    marginLeft: 0.033 * vw
+    marginLeft: 0.033 * vw,
+    position:'relative'
   },
   userInfo: {
     flexDirection: "row",

@@ -69,8 +69,9 @@ const tabs=createBottomTabNavigator(
 
 const AppStackNavigator = createStackNavigator(
   { 
-    pop:pop,
+    
     home:tabs,
+    pop:pop,
     popover:popover,
     appStart:appStart,
     article:article,
