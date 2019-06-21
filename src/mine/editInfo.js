@@ -35,7 +35,7 @@
         }
         render(){
             return(
-                <SafeAreaView style={{flex:1,marginTop:platfrom.os=='ios'?0:30}}>
+                <SafeAreaView style={{flex:1,marginTop:platfrom.OS=='ios'?0:30}}>
                     <ScrollView>
                         <Text style={[styles.commonText,{paddingBottom:0.03*vw,fontWeight:'bold',marginLeft:0.04*vw}]}>编辑资料</Text>
                         <Text style={[styles.commonText,styles.branTitle]}>基本资料</Text>

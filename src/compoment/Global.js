@@ -49,9 +49,9 @@ const ajaxPostImg=(url,data,success)=>{
     });
 }
 
-global.host='http://172.20.10.3:8080'//手机主机地址
+//global.host='http://172.20.10.3:8080'//手机主机地址
 //global.host='http://192.168.0.107:8080'//宿舍无线主机地址
- //global.host='http://10.8.31.53:8080'//图书馆wifi地址
+ global.host='http://10.8.30.89:8080'//图书馆wifi地址
 //global.host='http://192.168.8.158:8080'//家里地址
 global.Url={
     news_0:'http://v.juhe.cn/toutiao/index?type=0&key=5b17dafc6727b810d8d91b408c5ba232', //首页新闻

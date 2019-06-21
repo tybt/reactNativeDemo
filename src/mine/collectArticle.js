@@ -11,11 +11,12 @@ export default class collectArticle extends React.Component{
         this.state = {
             borderLeft:new Animated.Value(0.04*vw),
         };
+        console.log(platfrom,'platfrom.os')
     }
     
     render(){
         return(
-            <SafeAreaView style={{flex:1}}>
+            <SafeAreaView style={{flex:1,marginTop: platfrom.OS == "ios" ? 0 : 30}}>
                 <View style={styles.header}>
                     <View style={styles.headrBox}>
                         <Text style={[styles.headerWords]} onPress={()=>this.setBorder(0)}>我的收藏</Text>
@@ -55,7 +56,6 @@ const styles=StyleSheet.create({
         flexDirection:'row',
         borderColor:'#cccccc',
         borderBottomWidth:1,
-        paddingTop:35,
         paddingBottom:10,
         position:'relative'
     },

@@ -24,7 +24,7 @@ export default class WriteMoment extends React.Component{
     }
     render(){
         return(
-            <SafeAreaView>
+            <SafeAreaView style={{marginTop: platfrom.OS == "ios" ? 0 : 30,}}>
                 <View style={styles.topBrand}>
                     <Text onPress={()=>this.props.navigation.goBack()}>取消</Text>
                     <Text style={{fontSize:0.045*vw}} onPress={()=>this.upload()}>发布状态</Text>
@@ -141,7 +141,6 @@ const styles=StyleSheet.create({
         borderColor:'#cccccc',
         paddingLeft:0.04*vw,
         paddingRight:0.04*vw,
-        marginTop:platfrom.os=='ios'?0:30,
     },
     btnSave:{
         height:0.08*vw,

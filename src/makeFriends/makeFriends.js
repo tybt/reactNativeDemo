@@ -48,15 +48,16 @@ export default class makeFriends extends React.Component {
     });
   }
   componentDidMount() {
+    let _this=this;
     this._navListener = this.props.navigation.addListener("didFocus", () => {
       StatusBar.setBarStyle("dark-content");
-      var temp = AsyncStorage.getItem("phone");
-      console.log(temp,'是否登录')
-      if (temp != null) {
-        this.setState({ isLogin: true });
-      } else {
-        this.setState({ isLogin: false });
-      }
+      AsyncStorage.getItem("phone",function(err,value){
+        if (value != null) {
+          _this.setState({ isLogin: true });
+        } else {
+          _this.setState({ isLogin: false });
+        }
+        });
     });
   }
   componentWillUnmount() {
@@ -69,7 +70,7 @@ export default class makeFriends extends React.Component {
         forceInset={{ bottom: "always" }}
         style={{
           position: "relative",
-          marginTop: platfrom.os == "ios" ? 0 : 30,
+          marginTop: platfrom.OS == "ios" ? 0 : 30,
           paddingBottom: 35
         }}
       >

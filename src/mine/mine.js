@@ -106,7 +106,7 @@ export default class mine extends React.Component {
 
           <View style={styles.brandBorder}></View>
 
-          <TouchableOpacity >
+          <TouchableOpacity onPress={()=>this.props.navigation.navigate('setting')}>
             <View style={styles.brand}>
               <Image source={require('../img/mine_42.png')} style={styles.brand_1}></Image>
               <Text style={styles.brand_2}>设置</Text>

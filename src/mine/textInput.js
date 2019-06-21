@@ -20,7 +20,7 @@ export default class textInput extends React.Component{
     }
     render(){
         return(
-            <SafeAreaView>
+            <SafeAreaView style={{marginTop:platfrom.OS=='ios'?0:30}}>
                 <View style={styles.topBrand}>
                     <Text onPress={()=>this.props.navigation.goBack()}>取消</Text>
                     <Text style={{fontSize:0.045*vw}}>{this.props.navigation.state.params.name}</Text>

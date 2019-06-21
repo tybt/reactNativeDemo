@@ -50,7 +50,7 @@ export default class momentDetail extends React.Component {
   }
   render() {
     return (
-      <SafeAreaView style={{flex:1}}>
+      <SafeAreaView style={{flex:1,marginTop: platfrom.OS == "ios" ? 0 : 30}}>
         <ScrollView style={{marginBottom:40}}>
           {/* 用户信息部分 */}
           <View style={styles.userBrand}>
